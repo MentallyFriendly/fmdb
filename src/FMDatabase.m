@@ -393,14 +393,24 @@
             switch (current) {
                 case '@':
                     arg = va_arg(args, id);
+                    if (nil == arg) {
+                        arg = [NSNull null];
+                    }
                     break;
                 case 'c':
                     // warning: second argument to 'va_arg' is of promotable type 'char'; this va_arg has undefined behavior because arguments will be promoted to 'int'
                     arg = [NSString stringWithFormat:@"%c", va_arg(args, int)];
                     break;
                 case 's':
-                    arg = [NSString stringWithUTF8String:va_arg(args, char*)];
+                {
+                    char* s = va_arg(args, char*);
+                    if (nil == s) {
+                        arg = [NSNull null];
+                    } else {
+                        arg = [NSString stringWithUTF8String:s];
+                    }
                     break;
+                }
                 case 'd':
                 case 'D':
                 case 'i':
